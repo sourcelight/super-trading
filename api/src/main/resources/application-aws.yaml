@@ -1,0 +1,15 @@
+# Cloud profile. Activate with SPRING_PROFILES_ACTIVE=aws (env vars supplied by ECS task def).
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI}
+
+supertrading:
+  scheduling:
+    enabled: true
+    region: ${AWS_REGION}
+    group-name: ${SCHEDULING_GROUP:default}
+    queue-arn: ${SCHEDULING_QUEUE_ARN}
+    scheduler-role-arn: ${SCHEDULING_ROLE_ARN}

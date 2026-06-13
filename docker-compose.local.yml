@@ -1,0 +1,73 @@
+# Local simulation infrastructure (spec §14). Brings up the supporting services so the
+# API, worker, and frontend can run on the host with SPRING_PROFILES_ACTIVE=local.
+#
+#   docker compose -f docker-compose.local.yml up -d
+#
+# The API/worker/FE are intentionally NOT in here: run them on the host (the worker needs a
+# local Chromium for Playwright; the API/FE are easiest to debug as host processes).
+#
+# Config source-of-truth — keep these identical across this file, application-local.yaml
+# (api + worker), LocalSchedulingProperties, and LocalSecretsConfig:
+#   Postgres   localhost:5432   supertrading / supertrading / supertrading
+#   ElasticMQ  localhost:9324   queue "supertrading-jobs"
+#   LocalStack localhost:4566   services s3 + secretsmanager; bucket "supertrading-screenshots"
+#   Mock site  localhost:8088
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: supertrading
+      POSTGRES_PASSWORD: supertrading
+      POSTGRES_DB: supertrading
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supertrading"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  elasticmq:
+    image: softwaremill/elasticmq-native:1.6.11
+    ports:
+      - "9324:9324"
+      - "9325:9325"
+    volumes:
+      - ./elasticmq.conf:/opt/elasticmq.conf:ro
+
+  localstack:
+    image: localstack/localstack:3
+    environment:
+      SERVICES: s3,secretsmanager
+      DEBUG: "0"
+    ports:
+      - "4566:4566"
+
+  localstack-init:
+    image: amazon/aws-cli:2
+    depends_on:
+      - localstack
+    environment:
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >
+        for i in $$(seq 1 30); do
+          aws --endpoint-url=http://localstack:4566 s3 mb s3://supertrading-screenshots && break;
+          echo "waiting for localstack..."; sleep 2;
+        done
+
+  mock-target-site:
+    image: nginx:alpine
+    ports:
+      - "8088:80"
+    volumes:
+      - ./mock-target-site:/usr/share/nginx/html:ro
+
+volumes:
+  pgdata:

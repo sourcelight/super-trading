@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: super-trading-api
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/supertrading}
+    username: ${DB_USERNAME:supertrading}
+    password: ${DB_PASSWORD:supertrading}
+
+  jpa:
+    hibernate:
+      # Flyway owns the schema; Hibernate validates its mappings against it.
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    # Migrations live in the shared domain module (classpath:db/migration).
+    locations: classpath:db/migration
+
+  # Console auth — OAuth2 resource server validating Cognito JWTs.
+  # REQUIRED at runtime; set via env so no insecure default leaks in:
+  #   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=
+  #     https://cognito-idp.<region>.amazonaws.com/<userPoolId>
+  # (Intentionally not declared here to avoid an empty-string issuer at startup.)
+
+supertrading:
+  scheduling:
+    # When true, schedules are provisioned to AWS EventBridge Scheduler targeting
+    # the SQS queue; when false (default) a local no-op provisioner is used.
+    enabled: ${SCHEDULING_ENABLED:false}
+    region: ${AWS_REGION:}
+    group-name: ${SCHEDULING_GROUP:default}
+    queue-arn: ${SCHEDULING_QUEUE_ARN:}
+    scheduler-role-arn: ${SCHEDULING_ROLE_ARN:}
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    org.flywaydb: info

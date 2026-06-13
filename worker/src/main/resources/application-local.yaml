@@ -1,0 +1,15 @@
+# Local simulation profile (no AWS). Activate with SPRING_PROFILES_ACTIVE=local.
+# Datasource defaults (localhost:5432 / supertrading) come from application.yaml.
+supertrading:
+  worker:
+    region: us-east-1
+    queue-url: ${LOCAL_QUEUE_URL:http://localhost:9324/000000000000/supertrading-jobs}
+    sqs-endpoint: ${LOCAL_SQS_ENDPOINT:http://localhost:9324}
+    s3-endpoint: ${LOCAL_S3_ENDPOINT:http://localhost:4566}
+    secrets-endpoint: ${LOCAL_SECRETS_ENDPOINT:http://localhost:4566}
+    screenshot-bucket: ${LOCAL_SCREENSHOT_BUCKET:supertrading-screenshots}
+    access-key: local
+    secret-key: local
+    navigate-millis: ${WORKER_NAVIGATE_MILLIS:2000}
+    wait-time-seconds: 5
+    max-messages: 10

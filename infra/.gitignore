@@ -1,0 +1,14 @@
+# Terraform working files (provider binaries, state). The lock file IS committed.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Local var files may hold secrets; only the example is committed.
+terraform.tfvars
+*.auto.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

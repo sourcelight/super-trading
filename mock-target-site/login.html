@@ -1,0 +1,24 @@
+<!doctype html>
+<!--
+  Mock target site — login page. Element ids MUST match the seeded site.selectors_json
+  in api/.../local/LocalSeedRunner.java (#username, #password). The form GETs dashboard.html
+  so pressing Enter in the password field "logs in" and navigates.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mock Target — Login</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 360px; margin: 80px auto; }
+      input, button { display: block; width: 100%; margin: 8px 0; padding: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>Mock Target</h1>
+    <form action="dashboard.html" method="get">
+      <input id="username" name="username" placeholder="Username" />
+      <input id="password" name="password" type="password" placeholder="Password" />
+      <button id="login" type="submit">Log in</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+# Local simulation profile (no AWS). Activate with SPRING_PROFILES_ACTIVE=local.
+# Datasource defaults (localhost:5432 / supertrading) come from application.yaml.
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+supertrading:
+  scheduling:
+    # EventBridge stays off locally; LocalScheduleTrigger provides the ScheduleProvisioner.
+    enabled: false
+  local-scheduling:
+    sqs-endpoint: ${LOCAL_SQS_ENDPOINT:http://localhost:9324}
+    queue-url: ${LOCAL_QUEUE_URL:http://localhost:9324/000000000000/supertrading-jobs}
+    region: us-east-1
+    access-key: local
+    secret-key: local
+  local-secrets:
+    endpoint: ${LOCAL_SECRETS_ENDPOINT:http://localhost:4566}
+    region: us-east-1
+    access-key: local
+    secret-key: local
+
+server:
+  port: ${SERVER_PORT:8080}

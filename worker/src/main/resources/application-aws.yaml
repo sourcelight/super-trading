@@ -1,0 +1,11 @@
+# Cloud profile. Activate with SPRING_PROFILES_ACTIVE=aws (env vars supplied by ECS task def).
+# Endpoint/credential overrides are intentionally absent, so the SDK default endpoints and
+# the IAM task-role credential chain apply.
+supertrading:
+  worker:
+    region: ${AWS_REGION}
+    queue-url: ${WORKER_QUEUE_URL}
+    screenshot-bucket: ${WORKER_SCREENSHOT_BUCKET}
+    navigate-millis: ${WORKER_NAVIGATE_MILLIS:2000}
+    wait-time-seconds: ${WORKER_WAIT_SECONDS:20}
+    max-messages: ${WORKER_MAX_MESSAGES:10}

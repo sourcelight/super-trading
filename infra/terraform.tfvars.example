@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars and adjust.
+project     = "super-trading"
+environment = "dev"
+region      = "eu-west-1"
+
+# After the first apply, build & push images to the created ECR repos, then either
+# leave these blank (defaults to <repo>:latest) or pin a specific tag/digest:
+# api_image    = "<account>.dkr.ecr.<region>.amazonaws.com/super-trading-dev-api:<tag>"
+# worker_image = "<account>.dkr.ecr.<region>.amazonaws.com/super-trading-dev-worker:<tag>"
+
+db_instance_class = "db.t4g.micro"
+api_desired_count = 1

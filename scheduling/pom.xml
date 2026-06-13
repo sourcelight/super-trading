@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.rick</groupId>
+        <artifactId>super-trading-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>super-trading-scheduling</artifactId>
+    <name>super-trading-scheduling</name>
+    <description>AWS EventBridge Scheduler adapter for the ScheduleProvisioner port</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.rick</groupId>
+            <artifactId>super-trading-domain</artifactId>
+        </dependency>
+
+        <!-- Spring beans + @ConfigurationProperties + conditional wiring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- EventBridge Scheduler client -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>scheduler</artifactId>
+        </dependency>
+
+        <!-- SQS client for the local in-JVM schedule trigger (local profile) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+        </dependency>
+
+        <!-- JSON for the SQS-shaped message body -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- ===== test ===== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

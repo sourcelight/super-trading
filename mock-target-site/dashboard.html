@@ -1,0 +1,25 @@
+<!doctype html>
+<!--
+  Mock target site — dashboard. Element ids MUST match the seeded site.selectors_json
+  in api/.../local/LocalSeedRunner.java (#btn-green, #btn-red, #logout).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mock Target — Dashboard</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 480px; margin: 80px auto; text-align: center; }
+      button { padding: 16px 32px; margin: 8px; font-size: 18px; border: none; border-radius: 8px; color: #fff; }
+      #btn-green { background: #16a34a; }
+      #btn-red { background: #dc2626; }
+      #status { margin-top: 16px; min-height: 24px; }
+    </style>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <button id="btn-green" onclick="document.getElementById('status').textContent='GREEN clicked'">GREEN</button>
+    <button id="btn-red" onclick="document.getElementById('status').textContent='RED clicked'">RED</button>
+    <div id="status"></div>
+    <p><a id="logout" href="login.html">Logout</a></p>
+  </body>
+</html>
