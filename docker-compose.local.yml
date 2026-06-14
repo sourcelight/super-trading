@@ -46,7 +46,7 @@ services:
       - "4566:4566"
 
   localstack-init:
-    image: amazon/aws-cli:2
+    image: amazon/aws-cli:latest
     depends_on:
       - localstack
     environment:

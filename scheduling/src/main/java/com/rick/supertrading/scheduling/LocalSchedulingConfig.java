@@ -50,6 +50,12 @@ public class LocalSchedulingConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
     public LocalScheduleTrigger localScheduleTrigger(TaskScheduler localTaskScheduler,
                                                      SqsClient localSchedulerSqsClient,
                                                      ObjectMapper objectMapper,

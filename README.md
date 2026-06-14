@@ -181,21 +181,58 @@ Keep these identical across `docker-compose.local.yml`, `application-local.yaml`
 
 ### Run steps
 
+**Terminal 1: Start Docker infrastructure (once)**
+
 ```bash
-# 1. Infra (Postgres, ElasticMQ, LocalStack + bucket init, mock target site)
 docker compose -f docker-compose.local.yml up -d
-
-# 2. API (Flyway migrates; LocalSeedRunner inserts demo user/site/credential+secret)
-SPRING_PROFILES_ACTIVE=local ./mvnw -pl api spring-boot:run
-
-# 3. Worker (host JVM, for local Chromium). Install browsers once:
-./mvnw -pl worker exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args=install
-SPRING_PROFILES_ACTIVE=local ./mvnw -pl worker spring-boot:run   # continuous local poller
-
-# 4. Frontend (dev no-auth)
-cd frontend && cp .env.example .env.local   # set VITE_AUTH_DISABLED=true
-npm install && npm run dev
 ```
+
+This starts Postgres, ElasticMQ, LocalStack, and the mock target site. The database is persisted
+in a Docker volume (`pgdata`), so data survives container restarts (`docker compose down`). To
+delete the volume and start fresh: `docker compose down -v`.
+
+**Terminal 2: Run Flyway migrations (first time only, or after schema changes)**
+
+```powershell
+cd C:\job_local\repo_trading\super-trading
+.\mvnw -pl domain flyway:migrate `
+  "-Dflyway.url=jdbc:postgresql://localhost:5432/supertrading" `
+  "-Dflyway.user=supertrading" `
+  "-Dflyway.password=supertrading"
+```
+
+After the first migration, Flyway automatically runs on API startup, so you won't need this
+command again unless you add new migrations.
+
+**Terminal 3: Run the API (Flyway migrates automatically; LocalSeedRunner inserts demo user/site/credential+secret)**
+
+```powershell
+cd C:\job_local\repo_trading\super-trading
+$env:SPRING_PROFILES_ACTIVE='local'
+.\mvnw -pl api spring-boot:run
+```
+
+The API listens on `http://localhost:8080`. The local profile auto-seeds a demo ADMIN user
+with a mock site and credential.
+
+**Terminal 4: Run the Worker (host JVM, for local Chromium). Install browsers once:**
+
+```bash
+./mvnw -pl worker exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args=install
+$env:SPRING_PROFILES_ACTIVE='local'
+./mvnw -pl worker spring-boot:run   # continuous local poller
+```
+
+**Terminal 5: Run the Frontend (dev no-auth)**
+
+```bash
+cd frontend
+cp .env.example .env.local   # set VITE_AUTH_DISABLED=true
+npm install
+npm run dev
+```
+
+### Using the local system
 
 In the console create a schedule with a short interval (e.g. 30s) on the seeded credential.
 `LocalScheduleTrigger` enqueues every interval → the worker consumes → `execution`/`action`
