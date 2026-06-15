@@ -1,24 +1,78 @@
-<!doctype html>
-<!--
-  Mock target site — login page. Element ids MUST match the seeded site.selectors_json
-  in api/.../local/LocalSeedRunner.java (#username, #password). The form GETs dashboard.html
-  so pressing Enter in the password field "logs in" and navigates.
--->
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Mock Target — Login</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Target Site - Login</title>
     <style>
-      body { font-family: system-ui, sans-serif; max-width: 360px; margin: 80px auto; }
-      input, button { display: block; width: 100%; margin: 8px 0; padding: 8px; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+            display: none;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Mock Target</h1>
-    <form action="dashboard.html" method="get">
-      <input id="username" name="username" placeholder="Username" />
-      <input id="password" name="password" type="password" placeholder="Password" />
-      <button id="login" type="submit">Log in</button>
-    </form>
-  </body>
+</head>
+<body>
+    <div class="login-form">
+        <h1>Mock Trading Site</h1>
+        <form id="loginForm">
+            <input type="text" id="u" placeholder="Username" required>
+            <input type="password" id="p" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <div class="error" id="error">Invalid credentials</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('u').value;
+            const password = document.getElementById('p').value;
+
+            if (username && password) {
+                window.location.href = '/dashboard.html';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
 </html>

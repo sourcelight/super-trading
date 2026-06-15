@@ -1,5 +1,6 @@
 package com.rick.supertrading.worker.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,12 @@ public class WorkerAwsConfig {
 
     public WorkerAwsConfig(WorkerProperties properties) {
         this.properties = properties;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean
